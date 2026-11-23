@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Metrics Calculator - MRR, LTV, CAC & Payback</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Free SaaS calculator to compute MRR, ARR, Churn, LTV, CAC, and Payback period instantly.">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-6 font-sans">
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <span class="bg-indigo-900/60 text-indigo-400 text-xs px-3 py-1 rounded-full border border-indigo-700/50 uppercase tracking-widest font-semibold">Free SaaS Tool</span>
+            <h1 class="text-3xl font-extrabold text-white mt-3">SaaS Financial Health & LTV/CAC Calculator</h1>
+            <p class="text-slate-400 mt-2">Model your startup metrics, unit economics, and burn payback in seconds.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl space-y-4">
+                <h2 class="text-xl font-bold text-white mb-2">Input Variables</h2>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">Paying Customers</label>
+                    <input id="customers" type="number" value="120" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">Average Revenue Per User (ARPU / Month) ($)</label>
+                    <input id="arpu" type="number" value="49" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">Monthly Churn Rate (%)</label>
+                    <input id="churn" type="number" step="0.1" value="3.5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">Customer Acquisition Cost (CAC) ($)</label>
+                    <input id="cac" type="number" value="250" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <button onclick="calculate()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-lg transition duration-200 shadow-lg shadow-indigo-600/30">
+                    Recalculate Metrics
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-indigo-950/40 border border-indigo-800/60 p-6 rounded-2xl">
+                    <p class="text-xs uppercase text-indigo-400 tracking-wider font-semibold">Monthly Recurring Revenue (MRR)</p>
+                    <p id="res-mrr" class="text-4xl font-extrabold text-white mt-1">$5,880</p>
+                    <p id="res-arr" class="text-sm text-slate-400 mt-1">ARR: $70,560 / year</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-800/80 border border-slate-700 p-5 rounded-2xl">
+                        <p class="text-xs uppercase text-slate-400 font-semibold">Customer LTV</p>
+                        <p id="res-ltv" class="text-2xl font-bold text-emerald-400 mt-1">$1,400</p>
+                        <p class="text-xs text-slate-500 mt-1">ARPU / Churn</p>
+                    </div>
+                    <div class="bg-slate-800/80 border border-slate-700 p-5 rounded-2xl">
+                        <p class="text-xs uppercase text-slate-400 font-semibold">LTV / CAC Ratio</p>
+                        <p id="res-ratio" class="text-2xl font-bold text-emerald-400 mt-1">5.6x</p>
+                        <p id="res-ratio-desc" class="text-xs text-emerald-500 mt-1">Healthy (> 3.0x)</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700 p-5 rounded-2xl">
+                    <p class="text-xs uppercase text-slate-400 font-semibold">CAC Payback Time</p>
+                    <p id="res-payback" class="text-2xl font-bold text-white mt-1">5.1 Months</p>
+                    <p class="text-xs text-slate-400 mt-1">Time to recover sales & marketing spend</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monetization / CTA slot -->
+        <div class="mt-12 p-6 rounded-2xl bg-gradient-to-r from-indigo-900/40 via-purple-900/40 to-slate-800/60 border border-indigo-700/50 text-center">
+            <h3 class="text-lg font-bold text-white">Looking to scale your software business?</h3>
+            <p class="text-slate-300 text-sm mt-1">Check out our complete AI Starter Kits and automated lead pipelines.</p>
+            <div class="mt-4 flex justify-center gap-4">
+                <a href="#" class="px-5 py-2.5 bg-white text-slate-900 font-bold rounded-lg text-sm hover:bg-slate-200 transition">Explore AI Boilerplates</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const customers = parseFloat(document.getElementById('customers').value) || 0;
+            const arpu = parseFloat(document.getElementById('arpu').value) || 0;
+            const churnRate = (parseFloat(document.getElementById('churn').value) || 0) / 100;
+            const cac = parseFloat(document.getElementById('cac').value) || 0;
+
+            const mrr = customers * arpu;
+            const arr = mrr * 12;
+            const ltv = churnRate > 0 ? (arpu / churnRate) : 0;
+            const ratio = cac > 0 ? (ltv / cac) : 0;
+            const payback = arpu > 0 ? (cac / arpu) : 0;
+
+            document.getElementById('res-mrr').innerText = '$' + mrr.toLocaleString('en-US', {maximumFractionDigits: 0});
+            document.getElementById('res-arr').innerText = 'ARR: $' + arr.toLocaleString('en-US', {maximumFractionDigits: 0}) + ' / year';
+            document.getElementById('res-ltv').innerText = '$' + ltv.toLocaleString('en-US', {maximumFractionDigits: 0});
+            document.getElementById('res-ratio').innerText = ratio.toFixed(1) + 'x';
+            
+            const ratioDesc = document.getElementById('res-ratio-desc');
+            if (ratio >= 3) {
+                ratioDesc.innerText = 'Healthy (Great unit economics)';
+                ratioDesc.className = 'text-xs text-emerald-400 mt-1';
+            } else if (ratio >= 1) {
+                ratioDesc.innerText = 'Marginal (Optimization required)';
+                ratioDesc.className = 'text-xs text-amber-400 mt-1';
+            } else {
+                ratioDesc.innerText = 'Unprofitable (CAC exceeds LTV)';
+                ratioDesc.className = 'text-xs text-rose-400 mt-1';
+            }
+
+            document.getElementById('res-payback').innerText = payback.toFixed(1) + ' Months';
+        }
+        calculate();
+    </script>
+</body>
+</html>
