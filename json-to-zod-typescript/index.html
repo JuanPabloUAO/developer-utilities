@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to TypeScript & Zod Schema Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6 font-mono">
+    <div class="max-w-6xl mx-auto">
+        <header class="text-center mb-8">
+            <span class="bg-blue-900/40 text-blue-400 text-xs px-3 py-1 rounded-full border border-blue-700/50 uppercase tracking-widest font-semibold">Dev Productivity Tool</span>
+            <h1 class="text-3xl font-extrabold text-white mt-3 font-sans">JSON to TypeScript & Zod Schema Generator</h1>
+            <p class="text-slate-400 mt-2 font-sans">Generate production-ready TypeScript types and Zod runtime validators in zero milliseconds.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800">
+                <div class="flex justify-between items-center mb-3">
+                    <label class="text-sm font-semibold text-slate-300">Paste JSON Payload</label>
+                    <button onclick="loadSample()" class="text-xs text-blue-400 hover:underline">Load Sample</button>
+                </div>
+                <textarea id="jsonInput" rows="18" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-emerald-400 font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="{\n  \"name\": \"Acme Inc\",\n  \"usersCount\": 42\n}"></textarea>
+                <button onclick="convert()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-sans font-bold py-3 rounded-xl transition shadow-lg shadow-blue-600/30">
+                    Generate Types & Zod Schemas
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs uppercase font-bold text-slate-400 tracking-wider">TypeScript Interface</label>
+                        <button onclick="copyOutput('tsOutput')" class="text-xs text-blue-400 hover:underline">Copy TS</button>
+                    </div>
+                    <pre id="tsOutput" class="bg-slate-950 p-4 rounded-xl text-xs text-cyan-300 overflow-x-auto max-h-56">// Output will appear here</pre>
+                </div>
+
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs uppercase font-bold text-slate-400 tracking-wider">Zod Validation Schema</label>
+                        <button onclick="copyOutput('zodOutput')" class="text-xs text-blue-400 hover:underline">Copy Zod</button>
+                    </div>
+                    <pre id="zodOutput" class="bg-slate-950 p-4 rounded-xl text-xs text-purple-300 overflow-x-auto max-h-56">// Output will appear here</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadSample() {
+            document.getElementById('jsonInput').value = JSON.stringify({
+                id: "usr_991823",
+                name: "Alex Developer",
+                email: "alex@example.io",
+                isActive: true,
+                role: "admin",
+                teams: ["engineering", "security"],
+                billing: {
+                    plan: "enterprise",
+                    annualSpend: 14500.50
+                }
+            }, null, 2);
+            convert();
+        }
+
+        function getType(val) {
+            if (val === null) return "any";
+            if (Array.isArray(val)) {
+                if (val.length === 0) return "any[]";
+                return getType(val[0]) + "[]";
+            }
+            return typeof val;
+        }
+
+        function getZodType(val) {
+            if (val === null) return "z.any()";
+            if (Array.isArray(val)) {
+                if (val.length === 0) return "z.array(z.any())";
+                return "z.array(" + getZodType(val[0]) + ")";
+            }
+            if (typeof val === "string") return "z.string()";
+            if (typeof val === "number") return "z.number()";
+            if (typeof val === "boolean") return "z.boolean()";
+            if (typeof val === "object") {
+                let inner = "z.object({\n";
+                for (let k in val) {
+                    inner += "    " + k + ": " + getZodType(val[k]) + ",\n";
+                }
+                inner += "  })";
+                return inner;
+            }
+            return "z.any()";
+        }
+
+        function convert() {
+            try {
+                const raw = document.getElementById('jsonInput').value.trim();
+                if (!raw) return;
+                const obj = JSON.parse(raw);
+
+                let ts = "export interface RootObject {\n";
+                let zod = "import { z } from 'zod';\n\nexport const RootObjectSchema = z.object({\n";
+
+                for (let key in obj) {
+                    const val = obj[key];
+                    if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+                        ts += "  " + key + ": {\n";
+                        for (let sub in val) {
+                            ts += "    " + sub + ": " + getType(val[sub]) + ";\n";
+                        }
+                        ts += "  };\n";
+                    } else {
+                        ts += "  " + key + ": " + getType(val) + ";\n";
+                    }
+                    zod += "  " + key + ": " + getZodType(val) + ",\n";
+                }
+
+                ts += "}\n";
+                zod += "});\n\nexport type RootObject = z.infer<typeof RootObjectSchema>;\n";
+
+                document.getElementById('tsOutput').innerText = ts;
+                document.getElementById('zodOutput').innerText = zod;
+            } catch (err) {
+                document.getElementById('tsOutput').innerText = "// Error parsing JSON: " + err.message;
+                document.getElementById('zodOutput').innerText = "// Error parsing JSON: " + err.message;
+            }
+        }
+
+        function copyOutput(id) {
+            navigator.clipboard.writeText(document.getElementById(id).innerText);
+            alert("Copied to clipboard!");
+        }
+
+        loadSample();
+    </script>
+</body>
+</html>
