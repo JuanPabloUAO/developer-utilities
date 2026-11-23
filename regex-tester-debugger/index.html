@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instant Regex Tester & Debugger - Zero-Latency Matcher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6 font-sans">
+    <div class="max-w-4xl mx-auto py-8">
+        <a href="../index.html" class="text-xs font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest">← Back to Toolkit</a>
+        <h1 class="text-3xl font-black text-white mt-4">⚡ Real-Time Regular Expression Debugger</h1>
+        <p class="text-slate-400 text-sm mt-1">100% client-side zero-latency regex evaluation, match highlight, and group extraction.</p>
+
+        <div class="mt-8 bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Regex Pattern & Flags</label>
+                <div class="flex gap-2">
+                    <span class="p-3 bg-slate-800 text-slate-400 rounded-xl font-mono text-lg">/</span>
+                    <input id="regexInput" type="text" value="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 font-mono text-white focus:outline-none focus:border-indigo-500">
+                    <span class="p-3 bg-slate-800 text-slate-400 rounded-xl font-mono text-lg">/</span>
+                    <input id="flagsInput" type="text" value="g" class="w-20 bg-slate-800 border border-slate-700 rounded-xl px-3 py-3 font-mono text-white text-center">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Test String</label>
+                <textarea id="testInput" rows="5" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 font-mono text-sm text-white focus:outline-none focus:border-indigo-500">Contact our enterprise sales team at alex.turner@cloudscale.io or support@domain.co.uk for inquiries.</textarea>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Match Output & Groups</span>
+                    <span id="matchCount" class="text-xs bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full font-bold border border-indigo-800">2 Matches</span>
+                </div>
+                <div id="resultBox" class="bg-slate-950 p-4 rounded-xl font-mono text-sm border border-slate-800 min-h-[80px] break-all leading-relaxed"></div>
+            </div>
+        </div>
+
+        <!-- Sticky Commercial Footer -->
+        <div class="mt-12 p-6 rounded-2xl bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-800/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <h4 class="font-bold text-white text-base">The Production AI Engineering Handbook</h4>
+                <p class="text-slate-400 text-xs mt-0.5">Scale production agents with zero hallucination regex and schema parsers.</p>
+            </div>
+            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=juanpablo12campo%40gmail.com&item_name=The+Production+AI+Engineering+Handbook&amount=29.00&currency_code=USD" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow-lg shrink-0">
+                Buy Blueprint ($29 USD)
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const regexInput = document.getElementById('regexInput');
+        const flagsInput = document.getElementById('flagsInput');
+        const testInput = document.getElementById('testInput');
+        const resultBox = document.getElementById('resultBox');
+        const matchCount = document.getElementById('matchCount');
+
+        function updateRegex() {
+            try {
+                const re = new RegExp(regexInput.value, flagsInput.value);
+                const str = testInput.value;
+                const matches = str.match(re) || [];
+                matchCount.innerText = `${matches.length} Matches Found`;
+
+                if (matches.length === 0) {
+                    resultBox.innerHTML = '<span class="text-slate-500 italic">No matches detected.</span>';
+                    return;
+                }
+
+                let highlighted = str.replace(re, match => `<mark class="bg-indigo-500/40 text-indigo-200 px-1 rounded border border-indigo-500">${match}</mark>`);
+                resultBox.innerHTML = highlighted;
+            } catch(e) {
+                matchCount.innerText = "Syntax Error";
+                resultBox.innerHTML = `<span class="text-rose-400 font-mono text-xs">${e.message}</span>`;
+            }
+        }
+
+        regexInput.addEventListener('input', updateRegex);
+        flagsInput.addEventListener('input', updateRegex);
+        testInput.addEventListener('input', updateRegex);
+        updateRegex();
+    </script>
+</body>
+</html>
