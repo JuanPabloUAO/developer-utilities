@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instant JWT Decoder & Expiry Inspector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6 font-sans">
+    <div class="max-w-4xl mx-auto py-8">
+        <a href="../index.html" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 uppercase tracking-widest">← Back to Toolkit</a>
+        <h1 class="text-3xl font-black text-white mt-4">🔐 Zero-Latency JWT Token Inspector</h1>
+        <p class="text-slate-400 text-sm mt-1">Decode headers, claims, and compute token expiration in pure client-side JavaScript. Zero token data sent to servers.</p>
+
+        <div class="mt-8 space-y-6">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Encoded JWT Token</label>
+                <textarea id="jwtInput" rows="4" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 font-mono text-xs text-white focus:outline-none focus:border-emerald-500">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkF1dG9ub21vdXMgRW5naW5lZXIiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE5MTYyMzkwMjJ9.4z7kQ9g_z3yY4K7eF2</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-400 block mb-2">Header: Algorithm & Type</span>
+                    <pre id="headerOutput" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-rose-200 overflow-x-auto min-h-[140px]"></pre>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 block mb-2">Payload: Data Claims</span>
+                    <pre id="payloadOutput" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-indigo-200 overflow-x-auto min-h-[140px]"></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Commercial Footer -->
+        <div class="mt-12 p-6 rounded-2xl bg-gradient-to-r from-emerald-900/40 to-teal-900/40 border border-emerald-800/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <h4 class="font-bold text-white text-base">50 B2B High-Converting Cold Outreach Frameworks</h4>
+                <p class="text-slate-400 text-xs mt-0.5">Enterprise outbound formulas for software agencies and SaaS consultancies.</p>
+            </div>
+            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=juanpablo12campo%40gmail.com&item_name=50+B2B+High-Converting+Cold+Email+Frameworks&amount=19.00&currency_code=USD" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow-lg shrink-0">
+                Buy Frameworks ($19 USD)
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const jwtInput = document.getElementById('jwtInput');
+        const headerOutput = document.getElementById('headerOutput');
+        const payloadOutput = document.getElementById('payloadOutput');
+
+        function decodePart(b64) {
+            try {
+                let clean = b64.replace(/-/g, '+').replace(/_/g, '/');
+                while (clean.length % 4) clean += '=';
+                return JSON.stringify(JSON.parse(atob(clean)), null, 2);
+            } catch(e) {
+                return `Error parsing: ${e.message}`;
+            }
+        }
+
+        function updateJWT() {
+            const token = jwtInput.value.trim();
+            const parts = token.split('.');
+            if (parts.length >= 2) {
+                headerOutput.innerText = decodePart(parts[0]);
+                payloadOutput.innerText = decodePart(parts[1]);
+            } else {
+                headerOutput.innerText = "Invalid JWT structure (requires 3 period-separated segments)";
+                payloadOutput.innerText = "";
+            }
+        }
+
+        jwtInput.addEventListener('input', updateJWT);
+        updateJWT();
+    </script>
+</body>
+</html>
