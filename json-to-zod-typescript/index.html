@@ -3,48 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON to TypeScript & Zod Schema Generator</title>
+    <title>JSON to TypeScript & Zod Schema Converter - Zero-Latency Generator</title>
+    <meta name="description" content="Instantly convert raw JSON payloads into strict TypeScript interfaces and Zod runtime validation schemas. 100% client-side zero-latency dev tool.">
+    <link rel="canonical" href="https://juanpablouao.github.io/developer-utilities/json-to-zod-typescript/">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="JSON to TypeScript & Zod Schema Converter - Zero Latency">
+    <meta property="og:description" content="Generate production-ready TypeScript types and Zod runtime validators in zero milliseconds.">
+    <meta property="og:url" content="https://juanpablouao.github.io/developer-utilities/json-to-zod-typescript/">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON to TypeScript & Zod Schema Generator",
+      "url": "https://juanpablouao.github.io/developer-utilities/json-to-zod-typescript/",
+      "description": "Convert raw JSON into TypeScript interfaces and Zod validation schemas.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-6 font-mono">
-    <div class="max-w-6xl mx-auto">
-        <header class="text-center mb-8">
-            <span class="bg-blue-900/40 text-blue-400 text-xs px-3 py-1 rounded-full border border-blue-700/50 uppercase tracking-widest font-semibold">Dev Productivity Tool</span>
-            <h1 class="text-3xl font-extrabold text-white mt-3 font-sans">JSON to TypeScript & Zod Schema Generator</h1>
-            <p class="text-slate-400 mt-2 font-sans">Generate production-ready TypeScript types and Zod runtime validators in zero milliseconds.</p>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800">
-                <div class="flex justify-between items-center mb-3">
-                    <label class="text-sm font-semibold text-slate-300">Paste JSON Payload</label>
-                    <button onclick="loadSample()" class="text-xs text-blue-400 hover:underline">Load Sample</button>
-                </div>
-                <textarea id="jsonInput" rows="18" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-emerald-400 font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="{\n  \"name\": \"Acme Inc\",\n  \"usersCount\": 42\n}"></textarea>
-                <button onclick="convert()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-sans font-bold py-3 rounded-xl transition shadow-lg shadow-blue-600/30">
-                    Generate Types & Zod Schemas
-                </button>
-            </div>
-
-            <div class="space-y-4">
-                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800">
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="text-xs uppercase font-bold text-slate-400 tracking-wider">TypeScript Interface</label>
-                        <button onclick="copyOutput('tsOutput')" class="text-xs text-blue-400 hover:underline">Copy TS</button>
-                    </div>
-                    <pre id="tsOutput" class="bg-slate-950 p-4 rounded-xl text-xs text-cyan-300 overflow-x-auto max-h-56">// Output will appear here</pre>
-                </div>
-
-                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800">
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="text-xs uppercase font-bold text-slate-400 tracking-wider">Zod Validation Schema</label>
-                        <button onclick="copyOutput('zodOutput')" class="text-xs text-blue-400 hover:underline">Copy Zod</button>
-                    </div>
-                    <pre id="zodOutput" class="bg-slate-950 p-4 rounded-xl text-xs text-purple-300 overflow-x-auto max-h-56">// Output will appear here</pre>
-                </div>
-            </div>
+    <header class="max-w-6xl mx-auto pt-4 pb-6">
+        <a href="../index.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest focus:outline-none focus:underline">
+            ← Back to Developer Utilities
+        </a>
+        <div class="text-center mt-6">
+            <span class="bg-blue-950 text-blue-400 text-xs px-3.5 py-1.5 rounded-full border border-blue-800 uppercase tracking-widest font-semibold font-sans">Zero Latency Dev Tool</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-3 font-sans">JSON to TypeScript &amp; Zod Schema Generator</h1>
+            <p class="text-slate-400 mt-2 font-sans text-sm sm:text-base">Generate production-ready TypeScript types and Zod runtime validators in zero milliseconds.</p>
         </div>
-    </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto space-y-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <section class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl" aria-labelledby="input-section-heading">
+                <div class="flex justify-between items-center mb-3">
+                    <label id="input-section-heading" for="jsonInput" class="text-sm font-semibold text-slate-300 font-sans">Paste JSON Payload</label>
+                    <button type="button" onclick="loadSample()" class="text-xs text-blue-400 hover:text-blue-300 underline font-sans focus:outline-none">Load Sample</button>
+                </div>
+                <textarea id="jsonInput" rows="18" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-emerald-400 font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="{\n  &quot;name&quot;: &quot;Acme Inc&quot;,\n  &quot;usersCount&quot;: 42\n}"></textarea>
+                <button type="button" onclick="convert()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-sans font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-600/30 focus:ring-2 focus:ring-blue-400">
+                    Generate Types &amp; Zod Schemas
+                </button>
+            </section>
+
+            <section class="space-y-4" aria-labelledby="output-section-heading">
+                <h2 id="output-section-heading" class="sr-only">Generated Schemas</h2>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="tsOutput" class="text-xs uppercase font-bold text-slate-400 tracking-wider font-sans">TypeScript Interface</label>
+                        <button type="button" onclick="copyOutput('tsOutput', 'copyToastTS')" class="text-xs text-blue-400 hover:text-blue-300 underline font-sans focus:outline-none">Copy TS</button>
+                    </div>
+                    <pre id="tsOutput" tabindex="0" class="bg-slate-950 p-4 rounded-xl text-xs text-cyan-300 overflow-x-auto max-h-56 focus:outline-none focus:ring-1 focus:ring-cyan-500">// Output will appear here</pre>
+                    <div id="copyToastTS" class="hidden text-xs text-emerald-400 mt-2 font-sans" role="status">✔ TypeScript copied to clipboard</div>
+                </div>
+
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="zodOutput" class="text-xs uppercase font-bold text-slate-400 tracking-wider font-sans">Zod Validation Schema</label>
+                        <button type="button" onclick="copyOutput('zodOutput', 'copyToastZod')" class="text-xs text-blue-400 hover:text-blue-300 underline font-sans focus:outline-none">Copy Zod</button>
+                    </div>
+                    <pre id="zodOutput" tabindex="0" class="bg-slate-950 p-4 rounded-xl text-xs text-purple-300 overflow-x-auto max-h-56 focus:outline-none focus:ring-1 focus:ring-purple-500">// Output will appear here</pre>
+                    <div id="copyToastZod" class="hidden text-xs text-emerald-400 mt-2 font-sans" role="status">✔ Zod Schema copied to clipboard</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Commercial Pro Schema Starter Pack Monetization Banner -->
+        <section class="p-8 rounded-3xl bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-blue-800/80 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6" aria-labelledby="schema-kit-heading">
+            <div class="space-y-2 text-left font-sans">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950/80 px-2.5 py-1 rounded-md border border-blue-800">Commercial Dev Kit</span>
+                <h3 id="schema-kit-heading" class="text-2xl font-black text-white">TypeScript &amp; Zod Enterprise Schema Starter Pack</h3>
+                <p class="text-slate-300 text-sm max-w-xl">Pre-built production Zod schemas and TypeScript types for Stripe Webhooks, Supabase Auth, Next.js API Routes, OAuth2 profiles, and enterprise microservices.</p>
+                <div class="flex items-center gap-4 text-xs text-slate-400 font-mono pt-1">
+                    <span>✔ 40+ Production Schemas</span>
+                    <span>✔ Instant Download</span>
+                    <span>✔ Full Commercial License</span>
+                </div>
+            </div>
+            <div class="shrink-0 text-center sm:text-right font-sans">
+                <div class="text-3xl font-black text-white mb-2">$24.00 <span class="text-xs font-normal text-slate-400">USD</span></div>
+                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=juanpablo12campo%40gmail.com&item_name=TypeScript+and+Zod+Enterprise+Schema+Pack&amount=24.00&currency_code=USD" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-[#0070BA] hover:bg-[#003087] text-white font-bold py-3.5 px-6 rounded-xl transition duration-200 shadow-lg shadow-blue-500/20 focus:ring-2 focus:ring-blue-400">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.784.784 0 0 1 .773-.655h6.638c3.27 0 5.485 1.583 5.12 4.792-.375 3.32-2.585 5.093-5.748 5.093h-2.12a.784.784 0 0 0-.773.655l-1.758 7.732zm13.16-12.72c-.144 1.278-.654 2.378-1.478 3.2-.953.95-2.28 1.455-3.856 1.455h-2.21a.784.784 0 0 0-.773.655l-1.096 4.821h3.765a.641.641 0 0 0 .633-.538l.848-5.362a.784.784 0 0 1 .773-.655h.708c3.163 0 5.373-1.773 5.748-5.093.18-1.597-.184-2.85-.92-3.743z"/></svg>
+                    Buy Schema Pack ($24 USD)
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="max-w-6xl mx-auto mt-16 text-center text-slate-500 text-xs border-t border-slate-900 pt-8 font-sans">
+        <p>Built autonomously by Antigravity Autonomous Revenue Engine | Hosted on GitHub Pages</p>
+    </footer>
 
     <script>
         function loadSample() {
@@ -126,9 +184,15 @@
             }
         }
 
-        function copyOutput(id) {
-            navigator.clipboard.writeText(document.getElementById(id).innerText);
-            alert("Copied to clipboard!");
+        function copyOutput(elementId, toastId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById(toastId);
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 2500);
+            });
         }
 
         loadSample();
