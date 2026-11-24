@@ -4,50 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instant Regex Tester & Debugger - Zero-Latency Matcher</title>
+    <meta name="description" content="100% client-side zero-latency regex evaluation, match highlighting, and group extraction in real time. Private, free, zero server leaks.">
+    <link rel="canonical" href="https://juanpablouao.github.io/developer-utilities/regex-tester-debugger/">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Instant Regex Tester & Debugger - Zero Latency">
+    <meta property="og:description" content="Evaluate regular expressions with live highlighting and group extraction in pure client-side JavaScript.">
+    <meta property="og:url" content="https://juanpablouao.github.io/developer-utilities/regex-tester-debugger/">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Instant Regex Tester & Debugger",
+      "url": "https://juanpablouao.github.io/developer-utilities/regex-tester-debugger/",
+      "description": "Zero-latency regular expression tester with live highlight and group matching.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-6 font-sans">
-    <div class="max-w-4xl mx-auto py-8">
-        <a href="../index.html" class="text-xs font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest">← Back to Toolkit</a>
-        <h1 class="text-3xl font-black text-white mt-4">⚡ Real-Time Regular Expression Debugger</h1>
-        <p class="text-slate-400 text-sm mt-1">100% client-side zero-latency regex evaluation, match highlight, and group extraction.</p>
+    <header class="max-w-4xl mx-auto pt-4 pb-6">
+        <a href="../index.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest focus:outline-none focus:underline">
+            ← Back to Developer Utilities
+        </a>
+        <div class="mt-4">
+            <h1 class="text-3xl font-black text-white">⚡ Real-Time Regular Expression Debugger</h1>
+            <p class="text-slate-400 text-sm mt-1">100% client-side zero-latency regex evaluation, match highlight, and group extraction.</p>
+        </div>
+    </header>
 
-        <div class="mt-8 bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
+    <main class="max-w-4xl mx-auto space-y-8">
+        <section class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4" aria-labelledby="regex-controls-heading">
+            <h2 id="regex-controls-heading" class="sr-only">Regex Input and Configuration</h2>
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Regex Pattern & Flags</label>
+                <label for="regexInput" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Regex Pattern &amp; Flags</label>
                 <div class="flex gap-2">
-                    <span class="p-3 bg-slate-800 text-slate-400 rounded-xl font-mono text-lg">/</span>
-                    <input id="regexInput" type="text" value="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 font-mono text-white focus:outline-none focus:border-indigo-500">
-                    <span class="p-3 bg-slate-800 text-slate-400 rounded-xl font-mono text-lg">/</span>
-                    <input id="flagsInput" type="text" value="g" class="w-20 bg-slate-800 border border-slate-700 rounded-xl px-3 py-3 font-mono text-white text-center">
+                    <span class="p-3 bg-slate-800 text-slate-400 rounded-xl font-mono text-lg" aria-hidden="true">/</span>
+                    <input id="regexInput" type="text" aria-label="Regular Expression Pattern" value="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 font-mono text-white focus:outline-none focus:border-indigo-500">
+                    <span class="p-3 bg-slate-800 text-slate-400 rounded-xl font-mono text-lg" aria-hidden="true">/</span>
+                    <input id="flagsInput" type="text" aria-label="Regex Flags" value="g" class="w-20 bg-slate-800 border border-slate-700 rounded-xl px-3 py-3 font-mono text-white text-center">
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Test String</label>
+                <label for="testInput" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Test String</label>
                 <textarea id="testInput" rows="5" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 font-mono text-sm text-white focus:outline-none focus:border-indigo-500">Contact our enterprise sales team at alex.turner@cloudscale.io or support@domain.co.uk for inquiries.</textarea>
             </div>
 
             <div class="pt-4 border-t border-slate-800">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Match Output & Groups</span>
-                    <span id="matchCount" class="text-xs bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full font-bold border border-indigo-800">2 Matches</span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Match Output &amp; Groups</span>
+                    <span id="matchCount" class="text-xs bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full font-bold border border-indigo-800" role="status">2 Matches</span>
                 </div>
-                <div id="resultBox" class="bg-slate-950 p-4 rounded-xl font-mono text-sm border border-slate-800 min-h-[80px] break-all leading-relaxed"></div>
+                <div id="resultBox" tabindex="0" class="bg-slate-950 p-4 rounded-xl font-mono text-sm border border-slate-800 min-h-[80px] break-all leading-relaxed focus:outline-none focus:border-indigo-500"></div>
             </div>
-        </div>
+        </section>
 
-        <!-- Sticky Commercial Footer -->
-        <div class="mt-12 p-6 rounded-2xl bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-800/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-                <h4 class="font-bold text-white text-base">The Production AI Engineering Handbook</h4>
-                <p class="text-slate-400 text-xs mt-0.5">Scale production agents with zero hallucination regex and schema parsers.</p>
+        <!-- Sticky Commercial Footer / Blueprint Banner -->
+        <section class="p-8 rounded-3xl bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-blue-800/80 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6" aria-labelledby="ai-handbook-heading">
+            <div class="space-y-2 text-left">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950/80 px-2.5 py-1 rounded-md border border-blue-800">Commercial Architecture Reference</span>
+                <h3 id="ai-handbook-heading" class="text-2xl font-black text-white">The Production AI Engineering Handbook</h3>
+                <p class="text-slate-300 text-sm max-w-xl">Scale enterprise AI agents with zero-hallucination regex sanitizers, deterministic JSON schemas, async concurrency pools, and Gemini/Claude cost optimization.</p>
+                <div class="flex items-center gap-4 text-xs text-slate-400 font-mono pt-1">
+                    <span>✔ Instant Download</span>
+                    <span>✔ Code Boilerplates</span>
+                    <span>✔ Commercial License</span>
+                </div>
             </div>
-            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=juanpablo12campo%40gmail.com&item_name=The+Production+AI+Engineering+Handbook&amount=29.00&currency_code=USD" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow-lg shrink-0">
-                Buy Blueprint ($29 USD)
-            </a>
-        </div>
-    </div>
+            <div class="shrink-0 text-center sm:text-right">
+                <div class="text-3xl font-black text-white mb-2">$29.00 <span class="text-xs font-normal text-slate-400">USD</span></div>
+                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=juanpablo12campo%40gmail.com&item_name=The+Production+AI+Engineering+Handbook&amount=29.00&currency_code=USD" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-[#0070BA] hover:bg-[#003087] text-white font-bold py-3.5 px-6 rounded-xl transition duration-200 shadow-lg shadow-blue-500/20 focus:ring-2 focus:ring-blue-400">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.784.784 0 0 1 .773-.655h6.638c3.27 0 5.485 1.583 5.12 4.792-.375 3.32-2.585 5.093-5.748 5.093h-2.12a.784.784 0 0 0-.773.655l-1.758 7.732zm13.16-12.72c-.144 1.278-.654 2.378-1.478 3.2-.953.95-2.28 1.455-3.856 1.455h-2.21a.784.784 0 0 0-.773.655l-1.096 4.821h3.765a.641.641 0 0 0 .633-.538l.848-5.362a.784.784 0 0 1 .773-.655h.708c3.163 0 5.373-1.773 5.748-5.093.18-1.597-.184-2.85-.92-3.743z"/></svg>
+                    Buy Blueprint ($29 USD)
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="max-w-4xl mx-auto mt-16 text-center text-slate-500 text-xs border-t border-slate-900 pt-8">
+        <p>Built autonomously by Antigravity Autonomous Revenue Engine | Hosted on GitHub Pages</p>
+    </footer>
 
     <script>
         const regexInput = document.getElementById('regexInput');
