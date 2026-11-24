@@ -3,45 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instant JWT Decoder & Expiry Inspector</title>
+    <title>Instant JWT Decoder & Expiry Inspector - 100% Client-Side</title>
+    <meta name="description" content="Safely decode JSON Web Tokens, inspect claims, and check expiry countdown in pure client-side JavaScript. Zero token data sent to servers.">
+    <link rel="canonical" href="https://juanpablouao.github.io/developer-utilities/jwt-decoder-inspector/">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Instant JWT Decoder & Expiry Inspector - Free & Private">
+    <meta property="og:description" content="Zero-latency JWT token inspector. Decode headers, payload claims, and check token expiry without server leaks.">
+    <meta property="og:url" content="https://juanpablouao.github.io/developer-utilities/jwt-decoder-inspector/">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Instant JWT Decoder & Expiry Inspector",
+      "url": "https://juanpablouao.github.io/developer-utilities/jwt-decoder-inspector/",
+      "description": "Client-side JWT token decoder and expiration inspector.",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-6 font-sans">
-    <div class="max-w-4xl mx-auto py-8">
-        <a href="../index.html" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 uppercase tracking-widest">← Back to Toolkit</a>
-        <h1 class="text-3xl font-black text-white mt-4">🔐 Zero-Latency JWT Token Inspector</h1>
-        <p class="text-slate-400 text-sm mt-1">Decode headers, claims, and compute token expiration in pure client-side JavaScript. Zero token data sent to servers.</p>
+    <header class="max-w-4xl mx-auto pt-4 pb-6">
+        <a href="../index.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 uppercase tracking-widest focus:outline-none focus:underline">
+            ← Back to Developer Utilities
+        </a>
+        <div class="mt-4">
+            <span class="text-xs uppercase font-bold text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-md border border-emerald-900">Zero Server Storage</span>
+            <h1 class="text-3xl font-black text-white mt-2">🔐 Zero-Latency JWT Token Inspector</h1>
+            <p class="text-slate-400 text-sm mt-1">Decode headers, claims, and compute token expiration in pure client-side JavaScript. Zero token data sent to servers.</p>
+        </div>
+    </header>
 
-        <div class="mt-8 space-y-6">
+    <main class="max-w-4xl mx-auto space-y-8">
+        <section class="space-y-6" aria-labelledby="jwt-decoder-heading">
+            <h2 id="jwt-decoder-heading" class="sr-only">JWT Token Input and Decoded Results</h2>
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Encoded JWT Token</label>
+                <label for="jwtInput" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Encoded JWT Token</label>
                 <textarea id="jwtInput" rows="4" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 font-mono text-xs text-white focus:outline-none focus:border-emerald-500">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkF1dG9ub21vdXMgRW5naW5lZXIiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE5MTYyMzkwMjJ9.4z7kQ9g_z3yY4K7eF2</textarea>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
-                    <span class="text-xs font-bold uppercase tracking-wider text-rose-400 block mb-2">Header: Algorithm & Type</span>
-                    <pre id="headerOutput" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-rose-200 overflow-x-auto min-h-[140px]"></pre>
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-400 block mb-2">Header: Algorithm &amp; Type</span>
+                    <pre id="headerOutput" tabindex="0" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-rose-200 overflow-x-auto min-h-[140px] focus:outline-none focus:ring-1 focus:ring-rose-500"></pre>
                 </div>
 
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
                     <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 block mb-2">Payload: Data Claims</span>
-                    <pre id="payloadOutput" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-indigo-200 overflow-x-auto min-h-[140px]"></pre>
+                    <pre id="payloadOutput" tabindex="0" class="bg-slate-950 p-4 rounded-xl text-xs font-mono text-indigo-200 overflow-x-auto min-h-[140px] focus:outline-none focus:ring-1 focus:ring-indigo-500"></pre>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Sticky Commercial Footer -->
-        <div class="mt-12 p-6 rounded-2xl bg-gradient-to-r from-emerald-900/40 to-teal-900/40 border border-emerald-800/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-                <h4 class="font-bold text-white text-base">50 B2B High-Converting Cold Outreach Frameworks</h4>
-                <p class="text-slate-400 text-xs mt-0.5">Enterprise outbound formulas for software agencies and SaaS consultancies.</p>
+        <!-- Sticky Commercial Footer / Frameworks Banner -->
+        <section class="p-8 rounded-3xl bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-800/80 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6" aria-labelledby="outreach-frameworks-heading">
+            <div class="space-y-2 text-left">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-md border border-emerald-800">Commercial Agency Growth</span>
+                <h3 id="outreach-frameworks-heading" class="text-2xl font-black text-white">50 B2B High-Converting Cold Outreach Frameworks</h3>
+                <p class="text-slate-300 text-sm max-w-xl">Enterprise outbound formulas for software agencies and SaaS consultancies. High-converting sequences designed to reach CTOs and Engineering VP decision-makers.</p>
+                <div class="flex items-center gap-4 text-xs text-slate-400 font-mono pt-1">
+                    <span>✔ 50 Tested Frameworks</span>
+                    <span>✔ Instant Download</span>
+                    <span>✔ Commercial License</span>
+                </div>
             </div>
-            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=juanpablo12campo%40gmail.com&item_name=50+B2B+High-Converting+Cold+Email+Frameworks&amount=19.00&currency_code=USD" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow-lg shrink-0">
-                Buy Frameworks ($19 USD)
-            </a>
-        </div>
-    </div>
+            <div class="shrink-0 text-center sm:text-right">
+                <div class="text-3xl font-black text-white mb-2">$19.00 <span class="text-xs font-normal text-slate-400">USD</span></div>
+                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=juanpablo12campo%40gmail.com&item_name=50+B2B+High-Converting+Cold+Email+Frameworks&amount=19.00&currency_code=USD" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-[#0070BA] hover:bg-[#003087] text-white font-bold py-3.5 px-6 rounded-xl transition duration-200 shadow-lg shadow-blue-500/20 focus:ring-2 focus:ring-blue-400">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.784.784 0 0 1 .773-.655h6.638c3.27 0 5.485 1.583 5.12 4.792-.375 3.32-2.585 5.093-5.748 5.093h-2.12a.784.784 0 0 0-.773.655l-1.758 7.732zm13.16-12.72c-.144 1.278-.654 2.378-1.478 3.2-.953.95-2.28 1.455-3.856 1.455h-2.21a.784.784 0 0 0-.773.655l-1.096 4.821h3.765a.641.641 0 0 0 .633-.538l.848-5.362a.784.784 0 0 1 .773-.655h.708c3.163 0 5.373-1.773 5.748-5.093.18-1.597-.184-2.85-.92-3.743z"/></svg>
+                    Buy Frameworks ($19 USD)
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="max-w-4xl mx-auto mt-16 text-center text-slate-500 text-xs border-t border-slate-900 pt-8">
+        <p>Built autonomously by Antigravity Autonomous Revenue Engine | Hosted on GitHub Pages</p>
+    </footer>
 
     <script>
         const jwtInput = document.getElementById('jwtInput');
